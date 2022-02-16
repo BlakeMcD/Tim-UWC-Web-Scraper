@@ -1,23 +1,39 @@
 
+
 const PORT = 8000;
 const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
+const XLSX = require('xlsx');
 
 const app = express();
-
-let urlYear = 2021;
 
 const baseurl1 = 'https://www.davisuwcscholars.org/scholars/class-of-';
 const baseurl2 = 'https://www.davisuwcscholars.org/scholars/';
 
 // const combinedUrl = baseurl + (urlYear.toString());
 
-totalcounter = 0;
-oddcounter = 0;
-evencounter = 0;
+let totalcounter = 0;
+let oddcounter = 0;
+let evencounter = 0;
+
+let operationsCompleted = 0;
+
+let students = [];
+
+function complete() {
+    operationsCompleted += 1;
+    if (operationsCompleted >= 18) {
+        console.log("students length:" + students.length)
+        console.log("COMPLETELY COMPLETE!")
+    }
+}
 
 //BASE URL 1
+
+
+
+
 
 for (let i = 2021; i >= 2018; i--) {
 
@@ -25,8 +41,8 @@ for (let i = 2021; i >= 2018; i--) {
     .then(resp => {
         const html = resp.data;
         // console.log(html)
-        const students = [];
         
+        // const students = [];
 
         const $ = cheerio.load(html);
         $('.odd', html).each(function(idx, el) {
@@ -57,14 +73,18 @@ for (let i = 2021; i >= 2018; i--) {
             evencounter += 1;
 
         })
-        console.log("year:" + i);
-        console.log("total students:"+totalcounter);
-        console.log("odd students:"+oddcounter);
-        console.log("even students:"+evencounter);
+        // console.log("year:" + i);
+        // console.log("total students:"+totalcounter);
+        // console.log("odd students:"+oddcounter);
+        // console.log("even students:"+evencounter);
         
     })
+    .then(
+        () => complete()
+    )
     .catch(err => console.log(err));
 }
+
 
 //BASE URL 2
 for (let i = 2017; i >= 2004; i--) {
@@ -73,7 +93,7 @@ for (let i = 2017; i >= 2004; i--) {
     .then(resp => {
         const html = resp.data;
         // console.log(html)
-        const students = [];
+        // const students = [];
         
 
         const $ = cheerio.load(html);
@@ -105,16 +125,18 @@ for (let i = 2017; i >= 2004; i--) {
             evencounter += 1;
 
         })
-        console.log("year:" + i);
-        console.log("total students:"+totalcounter);
-        console.log("odd students:"+oddcounter);
-        console.log("even students:"+evencounter);
-        console.log(students);
+        // console.log("year:" + i);
+        // console.log("total students:"+totalcounter);
+        // console.log("odd students:"+oddcounter);
+        // console.log("even students:"+evencounter);
+        // console.log(students);
         
     })
+    .then(
+        () => complete()
+    )
     .catch(err => console.log(err));
 }
-
 
 
 app.listen(PORT, () => console.log(`Server running on Port ${PORT}`));
